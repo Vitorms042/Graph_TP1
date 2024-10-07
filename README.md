@@ -13,6 +13,6 @@ src -> dentro da pasta src, temos duas pastas:
     CaminhosDistintos que da erro: StackOverFlow ou cria muitos caminhos (o que deixa a solução ineficiente).
     Para caso de querer testar o metodo só executar o arquivo CaminhoDisjunto, assim como foi feito para o de cima.
 
-alguns_grafos_para_usar -> alguns grafos caso precise.
+ExemploGrafos -> Alguns arquivos de grafos que deixamos para facilitar a execução quando necessário.
 
 Exemplo_Saida_Articulacao & Exemplo_Saida_Tarjan -> alguns arquivos com os componentes e tempos gastos. 
