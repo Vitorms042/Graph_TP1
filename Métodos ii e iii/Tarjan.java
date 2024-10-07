@@ -1,194 +1,146 @@
-
-// A Java program to find biconnected components in a given
-// undirected Tarjan
 import java.io.File;
 import java.util.*;
 
-// This class represents a directed Tarjan using adjacency
-// list representation
+// Classe para encontrar componentes biconectados usando o algoritmo de Tarjan
 public class Tarjan {
-  private int V; // No. of vertices & Edges respectively
-  private LinkedList<Integer> adj[]; // Adjacency List
+    private int vertexCount; // Total de vértices
+    private LinkedList<Integer> adjacencyList[]; // Representação da lista de adjacência
 
-  // Count is number of biconnected components. time is
-  // used to find discovery times
-  static int count = 0, time = 0;
-  private static LinkedList<LinkedList<Integer>> componentes = new LinkedList<>();
-  private int auxiliar_comp;
+    static int componentCount = 0, discoveryTime = 0; // Contadores para componentes e tempos de descoberta
+    private static LinkedList<LinkedList<Integer>> biconnectedComponents = new LinkedList<>(); // Para armazenar componentes biconectados
+    private int currentComponentIndex; // Índice atual do componente sendo processado
 
-  class Edge {
-    int u;
-    int v;
+    class Connection {
+        int startVertex; // Vértice inicial de uma aresta
+        int endVertex; // Vértice final de uma aresta
 
-    Edge(int u, int v) {
-      this.u = u;
-      this.v = v;
-    }
-  };
-
-  Tarjan(ForwardStar fs) {
-    initialize(fs);
-  }
-
-  // Constructor
-  Tarjan(int v) {
-    componentes.add(new LinkedList<Integer>());
-    auxiliar_comp = 0;
-    V = v;
-    // E = 0;
-    adj = new LinkedList[v];
-    for (int i = 0; i < v; ++i)
-      adj[i] = new LinkedList<>();
-  }
-
-  // Function to add an edge into the Tarjan
-  void addEdge(int v, int w) {
-    adj[v].add(w);
-    // E++;
-  }
-
-  // A recursive function that finds and prints strongly connected
-  // components using DFS traversal
-  // u --> The vertex to be visited next
-  // disc[] --> Stores discovery times of visited vertices
-  // low[] -- >> earliest visited vertex (the vertex with minimum
-  // discovery time) that can be reached from subtree
-  // rooted with current vertex
-  // *st -- >> To store visited edges
-  void addComponent(int comp, int index) {
-    if (!componentes.get(index).contains(comp)) {
-      componentes.get(index).add(comp);
-    }
-  }
-
-  void BCCUtil(int u, int disc[], int low[], LinkedList<Edge> st,
-      int parent[]) {
-
-    // Initialize discovery time and low value
-    disc[u] = low[u] = ++time;
-    int children = 0;
-
-    // Go through all vertices adjacent to this
-    Iterator<Integer> it = adj[u].iterator();
-    while (it.hasNext()) {
-      int v = it.next(); // v is current adjacent of 'u'
-
-      // If v is not visited yet, then recur for it
-      if (disc[v] == -1) {
-        children++;
-        parent[v] = u;
-
-        // store the edge in stack
-        st.add(new Edge(u, v));
-        BCCUtil(v, disc, low, st, parent);
-
-        // Check if the subtree rooted with 'v' has a
-        // connection to one of the ancestors of 'u'
-        // Case 1 -- per Strongly Connected Components Article
-        if (low[u] > low[v])
-          low[u] = low[v];
-
-        // If u is an articulation point,
-        // pop all edges from stack till u -- v
-        if ((disc[u] == 1 && children > 1) || (disc[u] > 1 && low[v] >= disc[u])) {
-          while (st.getLast().u != u || st.getLast().v != v) {
-            addComponent(st.getLast().u, auxiliar_comp);
-            addComponent(st.getLast().v, auxiliar_comp);
-            st.removeLast();
-          }
-          addComponent(st.getLast().u, auxiliar_comp);
-          addComponent(st.getLast().v, auxiliar_comp);
-          auxiliar_comp++;
-          componentes.add(new LinkedList<>());
-          st.removeLast();
-
-          count++;
+        Connection(int start, int end) {
+            this.startVertex = start;
+            this.endVertex = end;
         }
-      }
+    };
 
-      // Update low value of 'u' only if 'v' is still in stack
-      // (i.e. it's a back edge, not cross edge).
-      // Case 2 -- per Strongly Connected Components Article
-      else if (v != parent[u] && disc[v] < disc[u]) {
-        if (low[u] > disc[v])
-          low[u] = disc[v];
-
-        st.add(new Edge(u, v));
-      }
-    }
-  }
-
-  // The function to do DFS traversal. It uses BCCUtil()
-  void BCC() {
-    long init = System.currentTimeMillis();
-    int disc[] = new int[V];
-    int low[] = new int[V];
-    int parent[] = new int[V];
-    LinkedList<Edge> st = new LinkedList<Edge>();
-
-    // Initialize disc and low, and parent arrays
-    for (int i = 0; i < V; i++) {
-      disc[i] = -1;
-      low[i] = -1;
-      parent[i] = -1;
+    // Construtor para Tarjan
+    Tarjan(ForwardStar forwardStar) {
+        setupGraph(forwardStar); // Inicializa o grafo a partir do ForwardStar
     }
 
-    for (int i = 0; i < V; i++) {
-      if (disc[i] == -1)
-        BCCUtil(i, disc, low, st, parent);
-
-      int j = 0;
-
-      // If stack is not empty, pop all edges from stack
-      while (st.size() > 0) {
-        j = 1;
-        System.out.print(st.getLast().u + "--" + st.getLast().v + " ");
-        st.removeLast();
-      }
-      if (j == 1) {
-        System.out.println();
-        count++;
-      }
+    Tarjan(int vertices) {
+        biconnectedComponents.add(new LinkedList<Integer>());
+        currentComponentIndex = 0;
+        vertexCount = vertices;
+        adjacencyList = new LinkedList[vertices];
+        for (int i = 0; i < vertices; ++i)
+            adjacencyList[i] = new LinkedList<>();
     }
 
-    System.out.println((System.currentTimeMillis() - init) + " ms");
-  }
-
-  public void addAllEdge(ForwardStar fs) {
-    for (int i = 1; i < fs.saida.length; i++) {
-      int vet[] = fs.listaSucessores(i);
-      for (int j = 0; j < vet.length; j++) {
-        addEdge(i, vet[j]);
-      }
-    }
-  }
-
-  public void initialize(ForwardStar forwardStar) {
-    
-    Tarjan g = new Tarjan(forwardStar.m + 2);
-    g.addAllEdge(forwardStar);
-
-    g.BCC();
-    componentes.removeLast();
-    for (LinkedList<Integer> element : componentes) {
-      System.out.println(element);
+    // Método para adicionar uma aresta
+    void insertEdge(int from, int to) {
+        adjacencyList[from].add(to);
     }
 
-  }
-
-
-  public static void main(String[] args) throws Exception {
-    ForwardStar fs = new ForwardStar(new File("Metodo i/grafos100vertices"));  
-
-        
-        usingTarjan(fs);
+    void recordComponent(int vertex, int componentIndex) {
+        if (!biconnectedComponents.get(componentIndex).contains(vertex)) {
+            biconnectedComponents.get(componentIndex).add(vertex);
+        }
     }
 
-    public static void usingTarjan(ForwardStar fs) {
-        new Tarjan(fs);
+    void explore(int currentVertex, int discovery[], int low[], LinkedList<Connection> edgeStack, int parent[]) {
+        discovery[currentVertex] = low[currentVertex] = ++discoveryTime; // Define o tempo de descoberta e valor baixo
+        int childCount = 0;
+
+        for (int adjacentVertex : adjacencyList[currentVertex]) {
+            if (discovery[adjacentVertex] == -1) {
+                childCount++;
+                parent[adjacentVertex] = currentVertex;
+                edgeStack.add(new Connection(currentVertex, adjacentVertex)); // Armazena a aresta
+
+                explore(adjacentVertex, discovery, low, edgeStack, parent); // DFS recursivo
+
+                if (low[currentVertex] > low[adjacentVertex]) {
+                    low[currentVertex] = low[adjacentVertex]; // Atualiza o valor baixo
+                }
+
+                if ((discovery[currentVertex] == 1 && childCount > 1) || (discovery[currentVertex] > 1 && low[adjacentVertex] >= discovery[currentVertex])) {
+                    while (edgeStack.getLast().startVertex != currentVertex || edgeStack.getLast().endVertex != adjacentVertex) {
+                        recordComponent(edgeStack.getLast().startVertex, currentComponentIndex);
+                        recordComponent(edgeStack.getLast().endVertex, currentComponentIndex);
+                        edgeStack.removeLast();
+                    }
+                    recordComponent(edgeStack.getLast().startVertex, currentComponentIndex);
+                    recordComponent(edgeStack.getLast().endVertex, currentComponentIndex);
+                    currentComponentIndex++;
+                    biconnectedComponents.add(new LinkedList<>());
+                    edgeStack.removeLast();
+                    componentCount++;
+                }
+            } else if (adjacentVertex != parent[currentVertex] && discovery[adjacentVertex] < discovery[currentVertex]) {
+                if (low[currentVertex] > discovery[adjacentVertex]) {
+                    low[currentVertex] = discovery[adjacentVertex]; // Atualiza o valor baixo para a aresta de retorno
+                }
+                edgeStack.add(new Connection(currentVertex, adjacentVertex)); // Armazena a aresta de retorno
+            }
+        }
     }
 
+    // Traversal DFS para encontrar componentes biconectados
+    void findBiconnectedComponents() {
+        long startTime = System.currentTimeMillis();
+        int discovery[] = new int[vertexCount];
+        int low[] = new int[vertexCount];
+        int parent[] = new int[vertexCount];
+        LinkedList<Connection> edgeStack = new LinkedList<>();
 
+        Arrays.fill(discovery, -1); // Inicializa o array de descoberta
+        Arrays.fill(low, -1); // Inicializa o array de valores baixos
+        Arrays.fill(parent, -1); // Inicializa o array de pais
+
+        for (int i = 0; i < vertexCount; i++) {
+            if (discovery[i] == -1) {
+                explore(i, discovery, low, edgeStack, parent); // Explora vértices não visitados
+            }
+
+            int found = 0;
+
+            while (edgeStack.size() > 0) {
+                found = 1;
+                System.out.print(edgeStack.getLast().startVertex + "--" + edgeStack.getLast().endVertex + " ");
+                edgeStack.removeLast(); // Remove arestas da pilha
+            }
+            if (found == 1) {
+                System.out.println(); // Imprime arestas encontradas
+                componentCount++;
+            }
+        }
+
+        System.out.println((System.currentTimeMillis() - startTime) + " ms"); // Tempo de execução
+    }
+
+    public void addAllEdges(ForwardStar forwardStar) {
+        for (int i = 1; i < forwardStar.saida.length; i++) {
+            int successors[] = forwardStar.listaSucessores(i);
+            for (int successor : successors) {
+                insertEdge(i, successor); // Insere todas as arestas do ForwardStar
+            }
+        }
+    }
+
+    public void setupGraph(ForwardStar forwardStar) {
+        Tarjan tarjanGraph = new Tarjan(forwardStar.m + 2);
+        tarjanGraph.addAllEdges(forwardStar); // Adiciona arestas do ForwardStar
+        tarjanGraph.findBiconnectedComponents(); // Encontra componentes biconectados
+        biconnectedComponents.removeLast();
+        for (LinkedList<Integer> component : biconnectedComponents) {
+            System.out.println(component); // Imprime cada componente biconectado
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        ForwardStar forwardStar = new ForwardStar(new File("Metodo i/grafos100vertices")); // Carrega dados do grafo
+        initializeTarjan(forwardStar);
+    }
+
+    public static void initializeTarjan(ForwardStar forwardStar) {
+        new Tarjan(forwardStar); // Cria instância de Tarjan
+    }
 }
-
-
