@@ -1,8 +1,8 @@
 # Graph_TP1
 
-Na pasta TP temos outras pastas: Create_Graph, grafos_usados e src.
+ExemploGrafos - Alguns arquivos de grafos que deixamos para facilitar a execução quando necessário.
 
-Create_Graph -> essa pasta serve para criar um arquivo que virá para a pasta raiz, ao entrar nela tem alguns comentarios de como utiliza-la.
+Metodo01(Caminhos Disjuntos) - Nesse código temos o primeiro método sugerido, onde nele há alguns comentarios sobre referencia e sobre entradas de arquivos
 
 src -> dentro da pasta src, temos duas pastas: 
     
@@ -12,7 +12,3 @@ src -> dentro da pasta src, temos duas pastas:
 
     CaminhosDistintos que da erro: StackOverFlow ou cria muitos caminhos (o que deixa a solução ineficiente).
     Para caso de querer testar o metodo só executar o arquivo CaminhoDisjunto, assim como foi feito para o de cima.
-
-ExemploGrafos -> Alguns arquivos de grafos que deixamos para facilitar a execução quando necessário.
-
-Exemplo_Saida_Articulacao & Exemplo_Saida_Tarjan -> alguns arquivos com os componentes e tempos gastos. 
