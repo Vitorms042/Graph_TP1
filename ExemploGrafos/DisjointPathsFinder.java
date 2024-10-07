@@ -1,3 +1,5 @@
+// Para a implementação desse método foi utilizado como referência o vídeo tutorial: https://www.youtube.com/watch?v=dmp7DIQl9fc.
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -198,8 +200,8 @@ public class DisjointPathsFinder {
     public static void main(String[] args) {
         long startTime = System.currentTimeMillis();
 
-        // loadGraphFromFile("graph-test-ex-tp01.txt");
-        generateRandomGraph(10000, 2000);
+        // loadGraphFromFile("graph-test-ex-tp01.txt"); // É possivel entrar com um grafo já existente caso seja necessário, dai só é preciso passar o nome do mesmo para ser usado
+        generateRandomGraph(100, 2000); // Essa função cria um grafo aleatório onde o primeiro parametro é a quantidade de grafos e o segundo é a quantidade de arestas
 
         long endTime = System.currentTimeMillis();
         System.out.println("Tempo de execução: " + (endTime - startTime) + " ms");
