@@ -11,6 +11,7 @@
  */
 
 
+import java.io.File;
 import java.util.*;
 
 
@@ -181,6 +182,24 @@ class Articulacao {
         
         return componentesConexos;
         
-        
     }
+
+    public static void main(String[] args) throws Exception {
+        ForwardStar fs = new ForwardStar(new File("Metodo i/grafos100vertices"));  
+    
+            usingArticulations(fs);
+    
+        }
+    
+       
+    
+        public static LinkedList<LinkedList<Integer>> usingArticulations(ForwardStar fs) {
+            long init = System.currentTimeMillis();
+            Biconnected biConnected = new Biconnected(new Graph(fs));
+            int array[] = biConnected.getArrayArticulation();
+            Articulacao dfs = new Articulacao(fs.saida.length - 1, fs);
+            var ret = dfs.getComponentes(array);
+            System.out.println((System.currentTimeMillis() - init) + " ms");
+            return ret;
+        }
 }
