@@ -1,6 +1,19 @@
+/**
+ * A classe {@code Articulacao} implementa uma estrutura para a análise de grafos não direcionados
+ * e a identificação de vértices de articulação. Um vértice de articulação é um ponto crítico,
+ * cuja remoção resulta em um aumento no número de componentes conectados no grafo. A classe 
+ * permite a adição e remoção de arestas e vértices, além de utilizar a busca em profundidade 
+ * (DFS) para explorar o grafo e determinar os componentes conectados resultantes após a 
+ * remoção das articulações. Os componentes conectados são armazenados em uma lista de listas, 
+ * facilitando o acesso e a manipulação.
+ * 
+ * REFERÊNCIA: https://www.geeksforgeeks.org
+ */
+
+
 import java.util.*;
 
-//tirado do site geeksforgeeks, modificado.
+
 class Articulacao {
     private int V;
     private LinkedList<Integer> adj[];

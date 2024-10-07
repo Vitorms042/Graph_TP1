@@ -1,13 +1,15 @@
-/******************************************************************************
- *  Compilation:  javac Biconnected.java
- *  Execution:    java Biconnected V E
- *  Dependencies: Graph.java GraphGenerator.java
- *
- *  Identify articulation points and print them out.
- *  This can be used to decompose a graph into biconnected components.
- *  Runs in O(E + V) time.
- *
- ******************************************************************************/
+/**
+ * Esta classe implementa um algoritmo para identificar e exibir pontos de articulação em um grafo.
+ * Os pontos de articulação são vértices cuja remoção aumenta o número de componentes conectados 
+ * no grafo. Esta implementação pode ser utilizada para decompor um grafo em componentes biconectados.
+ * 
+ * O algoritmo executa em tempo O(E + V), onde E representa o número de arestas e V o número de 
+ * vértices do grafo.
+ * 
+ * A implementação baseia-se em conceitos fundamentais de teoria de grafos, particularmente na 
+ * busca em profundidade (DFS) e na análise de conexões de vértices.
+ */
+
 
  public class Biconnected {
     private int[] low;
@@ -55,29 +57,28 @@
                 children++;
                 dfs(G, v, w);
 
-                // update low number
+               
                 low[v] = Math.min(low[v], low[w]);
 
-                // non-root of DFS is an articulation point if low[w] >= pre[v]
+               
                 if (low[w] >= pre[v] && u != v){
                     articulation[v] = true;
                     numrticulation++;
                 }
             }
 
-            // update low number - ignore reverse of edge leading to v
+        
             else if (w != u)
                 low[v] = Math.min(low[v], pre[w]);
         }
 
-        // root of DFS is an articulation point if it has more than 1 child
+        
         if (u == v && children > 1){
             articulation[v] = true;
             numrticulation++;
         }
     }
 
-    // is vertex v an articulation point?
     public boolean isArticulation(int v) { return articulation[v]; }
 
     public void iterarGrafo(Graph G)

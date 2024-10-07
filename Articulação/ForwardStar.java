@@ -1,3 +1,18 @@
+/*
+ * /**
+ * Esta classe implementa uma estrutura de grafo utilizando a técnica de Forward Star, 
+ * que permite uma representação compacta e eficiente dos vértices e arestas de um grafo direcionado. 
+ * A classe fornece métodos para a leitura de um arquivo que contém a representação do grafo e 
+ * permite consultas sobre os sucessores de cada vértice, facilitando a análise de suas conexões.
+ *
+ * Referência: 
+ * "Algorithms, Part II" por Robert Sedgewick e Kevin Wayne, que aborda estruturas de dados e 
+ * algoritmos para grafos, incluindo técnicas de representação eficiente.
+ */
+ 
+
+
+
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.util.Scanner;

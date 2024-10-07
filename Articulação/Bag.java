@@ -1,68 +1,44 @@
+/**
+ * A classe {@code Bag} representa um conjunto (multiset) de itens genéricos, 
+ * permitindo a inserção e iteração sobre os elementos de forma arbitrária.
+ * Esta implementação utiliza uma lista ligada simples com uma classe interna 
+ * estática {@code Node}.
+ *
+ * Para mais detalhes, consulte a Seção 1.3 de 
+ * <i>Algorithms, 4th Edition</i> por Robert Sedgewick e Kevin Wayne.
+ *
+ * @see <a href="https://algs4.cs.princeton.edu/13stacks">Seção 1.3</a> 
+ * @see <i>Algorithms, 4th Edition</i> por Robert Sedgewick e Kevin Wayne
+ * @param <Item> o tipo genérico de cada item na bag
+ */
+
+
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-/**
- *  The {@code Bag} class represents a bag (or multiset) of
- *  generic items. It supports insertion and iterating over the
- *  items in arbitrary order.
- *  <p>
- *  This implementation uses a singly linked list with a static nested class Node.
- *  See {@link LinkedBag} for the version from the
- *  textbook that uses a non-static nested class.
- *  See {@link ResizingArrayBag} for a version that uses a resizing array.
- *  The <em>add</em>, <em>isEmpty</em>, and <em>size</em> operations
- *  take constant time. Iteration takes time proportional to the number of items.
- *  <p>
- *  For additional documentation, see <a href="https://algs4.cs.princeton.edu/13stacks">Section 1.3</a> of
- *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
- *
- *  @author Robert Sedgewick
- *  @author Kevin Wayne
- *
- *  @param <Item> the generic type of each item in this bag
- */
 public class Bag<Item> implements Iterable<Item> {
-    private Node<Item> first;    // beginning of bag
-    private int n;               // number of elements in bag
+    private Node<Item> first; 
+    private int n;            
 
-    // helper linked list class
     private static class Node<Item> {
         private Item item;
         private Node<Item> next;
     }
 
-    /**
-     * Initializes an empty bag.
-     */
     public Bag() {
         first = null;
         n = 0;
     }
 
-    /**
-     * Returns true if this bag is empty.
-     *
-     * @return {@code true} if this bag is empty;
-     *         {@code false} otherwise
-     */
     public boolean isEmpty() {
         return first == null;
     }
 
-    /**
-     * Returns the number of items in this bag.
-     *
-     * @return the number of items in this bag
-     */
     public int size() {
         return n;
     }
 
-    /**
-     * Adds the item to this bag.
-     *
-     * @param  item the item to add to this bag
-     */
     public void add(Item item) {
         Node<Item> oldfirst = first;
         first = new Node<Item>();
@@ -71,13 +47,7 @@ public class Bag<Item> implements Iterable<Item> {
         n++;
     }
 
-
-    /**
-     * Returns an iterator that iterates over the items in this bag in arbitrary order.
-     *
-     * @return an iterator that iterates over the items in this bag in arbitrary order
-     */
-    public Iterator<Item> iterator()  {
+    public Iterator<Item> iterator() {
         return new LinkedIterator(first);
     }
 
@@ -88,7 +58,7 @@ public class Bag<Item> implements Iterable<Item> {
             current = first;
         }
 
-        public boolean hasNext()  {
+        public boolean hasNext() {
             return current != null;
         }
 
@@ -99,10 +69,4 @@ public class Bag<Item> implements Iterable<Item> {
             return item;
         }
     }
-
-    /**
-     * Unit tests the {@code Bag} data type.
-     *
-     * @param args the command-line arguments
-     */
 }
